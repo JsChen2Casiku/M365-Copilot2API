@@ -169,9 +169,16 @@ docker run -d \
 
 #### Method 2: Using Docker Compose
 
-The repository includes a `docker-compose.yml` file. Run:
+The repository includes a `docker-compose.yml` that seamlessly integrates with `.env` (supports custom port, admin password, data volume, proxy, etc.):
 
 ```bash
+# 1. Copy the configuration template
+cp .env.example .env
+
+# 2. Modify configurations in .env as needed
+# vim .env
+
+# 3. Start the service
 docker compose up -d
 ```
 

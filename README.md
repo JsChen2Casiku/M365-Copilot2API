@@ -171,9 +171,16 @@ docker run -d \
 
 #### 方式二：使用 Docker Compose
 
-仓库内置 `docker-compose.yml`，执行以下命令即可启动：
+仓库内置 `docker-compose.yml`，且已与 `.env` 深度联动（支持自定义端口、管理员密码、数据目录、代理等）：
 
 ```bash
+# 1. 复制配置文件模板
+cp .env.example .env
+
+# 2. 按需修改 .env 中的配置（如监听端口、数据目录等）
+# vim .env
+
+# 3. 启动服务
 docker compose up -d
 ```
 
