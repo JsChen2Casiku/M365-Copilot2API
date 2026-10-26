@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - main
+      - dev
     tags:
       - 'v*'
   pull_request:
     branches:
       - main
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -70,8 +72,8 @@ jobs:
           version="dev"
           if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
             version="${GITHUB_REF_NAME#v}"
-          elif [[ "${GITHUB_REF_NAME:-}" == "main" ]]; then
-            version="main"
+          elif [[ -n "${GITHUB_REF_NAME:-}" ]]; then
+            version="${GITHUB_REF_NAME}"
           fi
           commit="$(git rev-parse --short HEAD)"
           build_time="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
