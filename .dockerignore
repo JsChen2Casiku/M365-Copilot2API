@@ -1,0 +1,13 @@
+.git
+.github
+.idea
+.vscode
+data/
+secrets/
+dist/
+tests/
+scripts/
+docs/
+*.md
+.env
+.env.*

@@ -1,13 +1,26 @@
-FROM golang:1.23-alpine AS build
+FROM --platform=$BUILDPLATFORM golang:1.23-alpine AS build
+
+ARG TARGETOS
+ARG TARGETARCH
+ARG VERSION=dev
+ARG COMMIT=unknown
+ARG BUILD_TIME=unknown
 
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /out/m365-copilot2api ./cmd/server
+RUN set -e; \
+    export CGO_ENABLED=0; \
+    if [ -n "$TARGETOS" ]; then export GOOS="$TARGETOS"; else export GOOS="linux"; fi; \
+    if [ -n "$TARGETARCH" ]; then export GOARCH="$TARGETARCH"; fi; \
+    go build -trimpath \
+      -ldflags="-s -w -X m365-copilot2api/internal/web.Version=${VERSION} -X m365-copilot2api/internal/web.Commit=${COMMIT} -X m365-copilot2api/internal/web.BuildTime=${BUILD_TIME}" \
+      -o /out/m365-copilot2api ./cmd/server
 
 FROM alpine:3.20
-RUN addgroup -S m365 && adduser -S -G m365 m365 \
+RUN apk --no-cache add ca-certificates tzdata \
+    && addgroup -S m365 && adduser -S -G m365 m365 \
     && mkdir -p /data /app
 WORKDIR /app
 COPY --from=build /out/m365-copilot2api /app/m365-copilot2api

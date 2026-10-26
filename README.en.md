@@ -150,7 +150,30 @@ Running the binary directly listens only on the internal network at `http://127.
 
 ### Docker deployment
 
-> No official Dockerfile is provided. For containerized deployment, build your own image from the precompiled binary or source, or discuss community approaches in Discussions.
+The project provides automated multi-architecture (`linux/amd64` and `linux/arm64`) Docker images published to GitHub Packages (GHCR).
+
+#### Method 1: Pull from GitHub Packages (Recommended)
+
+```bash
+# Pull the latest image (automatically matches amd64 or arm64 / Apple Silicon / Raspberry Pi)
+docker pull ghcr.io/jschen2casiku/m365-copilot2api:latest
+
+# Run container with data volume mounted
+docker run -d \
+  --name m365-copilot2api \
+  --restart unless-stopped \
+  -p 127.0.0.1:4141:4141 \
+  -v $(pwd)/data:/data \
+  ghcr.io/jschen2casiku/m365-copilot2api:latest
+```
+
+#### Method 2: Using Docker Compose
+
+The repository includes a `docker-compose.yml` file. Run:
+
+```bash
+docker compose up -d
+```
 
 ### Initialization and first call
 

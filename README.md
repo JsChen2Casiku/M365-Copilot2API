@@ -152,7 +152,30 @@ python manage.py stop     # 停止服务
 
 ### Docker 部署
 
-> 官方不提供 Dockerfile。如需容器化部署，可自行基于预编译二进制或源码构建镜像，或在 Discussions 交流社区方案。
+项目提供自动化多架构（`linux/amd64` 与 `linux/arm64`）镜像，发布至 GitHub Packages (GHCR)。
+
+#### 方式一：使用 GitHub Packages 预构建镜像（推荐）
+
+```bash
+# 拉取最新镜像（自动适配 x86_64 或 ARM64 / Apple Silicon / 树莓派）
+docker pull ghcr.io/jschen2casiku/m365-copilot2api:latest
+
+# 运行容器并挂载数据目录
+docker run -d \
+  --name m365-copilot2api \
+  --restart unless-stopped \
+  -p 127.0.0.1:4141:4141 \
+  -v $(pwd)/data:/data \
+  ghcr.io/jschen2casiku/m365-copilot2api:latest
+```
+
+#### 方式二：使用 Docker Compose
+
+仓库内置 `docker-compose.yml`，执行以下命令即可启动：
+
+```bash
+docker compose up -d
+```
 
 ### 初始化与第一次调用
 
